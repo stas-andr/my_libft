@@ -6,7 +6,7 @@
 /*   By: bstrider <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/16 17:26:41 by bstrider          #+#    #+#             */
-/*   Updated: 2020/11/23 12:23:09 by bstrider         ###   ########.fr       */
+/*   Updated: 2020/11/25 20:13:47 by bstrider         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,12 @@ static int	ft_cnt_words(char const *str, char c)
 	return (ret);
 }
 
-static void	ft_free_arr(char **arr, int index)
+static char	**ft_free_arr(char **arr, int index)
 {
 	while (index--)
 		free(arr[index]);
 	free(arr);
+	return (NULL);
 }
 
 char		**ft_split(char const *s, char c)
@@ -82,14 +83,14 @@ char		**ft_split(char const *s, char c)
 		else
 		{
 			if (word && !(ret[cnt++] = ft_strndup(word, s - word)))
-			{
-				ft_free_arr(ret, cnt - 1);
-				return (NULL);
-			}
+				return (ft_free_arr(ret, cnt - 1));
 			word = NULL;
 		}
 		s++;
 	}
-	ret[cnt] = (word) ? ft_strndup(word, s - word) : NULL;
+	if (word)
+		if (!(ret[cnt++] = ft_strndup(word, s - word)))
+			return (ft_free_arr(ret, cnt - 1));
+	ret[cnt] = (NULL);
 	return (ret);
 }
